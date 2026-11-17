@@ -35,8 +35,27 @@
   $("name").textContent = profile.name || "";
   $("role").textContent = profile.role || "";
   $("bio").textContent = profile.bio || "";
-  $("links").innerHTML = (profile.links || [])
-    .map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`)
+  // 이메일(mailto:) 링크는 오른쪽 위 Contact 버튼으로, 나머지는 로고 버튼으로
+  const ICONS = {
+    youtube: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0000"/><path d="M10 8.5v7l6-3.5z" fill="#fff"/></svg>`,
+    instagram: `<svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="igg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FEDA75"/><stop offset=".35" stop-color="#FA7E1E"/><stop offset=".6" stop-color="#D62976"/><stop offset=".85" stop-color="#962FBF"/><stop offset="1" stop-color="#4F5BD5"/></linearGradient></defs><rect x="1" y="1" width="22" height="22" rx="6.5" fill="url(#igg)"/><rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="16.4" cy="7.6" r="1.1" fill="#fff"/></svg>`,
+  };
+  const kindOf = (url = "") =>
+    /^mailto:/i.test(url) ? "mail" : /youtu\.?be/i.test(url) ? "youtube" : /instagram\.com/i.test(url) ? "instagram" : "link";
+  const allLinks = profile.links || [];
+  const mail = allLinks.find((l) => kindOf(l.url) === "mail");
+  if (mail) {
+    const c = $("contact");
+    c.href = mail.url;
+    c.title = mail.url.replace(/^mailto:/i, "");
+    c.hidden = false;
+  }
+  $("links").innerHTML = allLinks
+    .filter((l) => kindOf(l.url) !== "mail")
+    .map((l) => {
+      const k = kindOf(l.url);
+      return `<a class="social ${k}" href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="${esc(l.label)} 바로가기">${ICONS[k] || ""}<span>${esc(l.label)}</span><span class="go">바로가기 ↗</span></a>`;
+    })
     .join("");
   $("copyright").textContent = `© ${new Date().getFullYear()} ${profile.name || ""}`;
 
