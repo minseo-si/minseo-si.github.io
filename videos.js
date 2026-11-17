@@ -27,8 +27,8 @@ window.PORTFOLIO = {
 
   profile: {
     name: "시민서",
-    role: "Video Editor · Motion Designer",
-    bio: "공감으로 대중과 소통합니다. 브랜드 필름, 숏폼 콘텐츠를 만듭니다.",
+    role: "콘텐츠 기획자",
+    bio: "공감으로 대중과 소통합니다. 주로 숏폼 콘텐츠를 만듭니다.",
     links: [
       { label: "Email", url: "mailto:hellojagguri@gmail.com" },
       { label: "YouTube", url: "https://www.youtube.com/@jangguri_life" },
