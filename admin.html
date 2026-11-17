@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>포트폴리오 관리</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f5f4; --surface: #fff; --text: #18181b; --muted: #6b6b73; --line: #e4e4e7;
+      --accent: #e8431f; --ok: #15803d; --warn: #b45309; --radius: 12px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0e0e10; --surface: #18181b; --text: #f4f4f5; --muted: #a1a1aa; --line: #2a2a2e; --accent: #ff5a36; --ok: #4ade80; --warn: #fbbf24; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: "Noto Sans KR", system-ui, sans-serif; line-height: 1.5; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px 120px; }
+    header.top {
+      position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+    }
+    header.top .wrap { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding-top: 12px; padding-bottom: 12px; }
+    header.top h1 { font-size: 1.1rem; margin: 0 auto 0 0; }
+    .status { font-size: .85rem; color: var(--muted); }
+    .status.dirty { color: var(--warn); font-weight: 600; }
+    .status.ok { color: var(--ok); font-weight: 600; }
+    button, .btn {
+      font: inherit; font-size: .9rem; border: 1px solid var(--line); background: var(--surface); color: var(--text);
+      padding: 7px 14px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-flex; gap: 6px; align-items: center;
+    }
+    button:hover, .btn:hover { border-color: var(--text); }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    button.danger { color: var(--accent); }
+    button.icon { padding: 5px 10px; }
+    button:disabled { opacity: .4; cursor: default; }
+    h2 { font-size: 1.05rem; margin: 32px 0 12px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+    .help { color: var(--muted); font-size: .85rem; margin: 4px 0 0; }
+    .notice { background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius); padding: 12px 16px; font-size: .9rem; margin-top: 16px; }
+    label { display: block; font-size: .8rem; color: var(--muted); font-weight: 600; }
+    input, textarea, select {
+      width: 100%; font: inherit; font-size: .95rem; color: var(--text); background: var(--bg);
+      border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin-top: 4px;
+    }
+    textarea { min-height: 64px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+    .grid2 { display: grid; gap: 12px; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .grid2 { grid-template-columns: 1fr 1fr; } .span2 { grid-column: span 2; } }
+    .row { display: flex; gap: 8px; align-items: end; margin-top: 8px; }
+    .row > * { flex: 1; }
+    .row > button { flex: 0 0 auto; }
+
+    .video { display: grid; gap: 16px; grid-template-columns: 1fr; margin-bottom: 14px; }
+    @media (min-width: 720px) { .video { grid-template-columns: 150px 1fr; } }
+    .video .thumb {
+      aspect-ratio: 9 / 16; background: linear-gradient(150deg, var(--accent), #7c3aed); border-radius: 10px; overflow: hidden;
+      display: grid; place-items: center; color: #fff; font-weight: 800; max-width: 150px;
+    }
+    .video .thumb img, .video .thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .video .head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 12px; }
+    .video .head .num { font-weight: 800; color: var(--muted); margin-right: auto; }
+    .featured-tag { display: inline-flex; gap: 6px; align-items: center; font-size: .85rem; font-weight: 600; cursor: pointer; color: var(--text); }
+    .featured-tag input { width: auto; margin: 0; }
+    .src { display: grid; grid-template-columns: 150px 1fr; gap: 8px; align-items: end; }
+    .src.file { grid-template-columns: 150px 1fr auto; }
+    @media (max-width: 520px) { .src, .src.file { grid-template-columns: 1fr; } }
+    .warn { color: var(--warn); font-size: .85rem; margin: 6px 0 0; }
+    .add { width: 100%; justify-content: center; padding: 14px; border-style: dashed; border-radius: var(--radius); }
+    .toast {
+      position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--text); color: var(--bg);
+      padding: 10px 18px; border-radius: 999px; font-size: .9rem; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px);
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1>포트폴리오 관리</h1>
+      <span class="status" id="status">불러오는 중…</span>
+      <a class="btn" href="index.html" target="_blank">사이트 보기 ↗</a>
+      <button class="primary" id="saveBtn">저장</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="notice" id="notice">
+      처음 <b>저장</b>할 때 폴더 선택 창이 뜨면 <b>포트폴리오 폴더</b>(index.html이 있는 폴더)를 골라 주세요.
+      저장하면 <code>videos.js</code>가 바뀌고, 추가한 영상은 <code>media</code> 폴더에 복사돼요.
+      저장 후 GitHub에 <code>videos.js</code>와 새 영상 파일을 올리면 사이트에 반영돼요.
+    </div>
+
+    <h2>기본 설정</h2>
+    <section class="panel grid2" id="profile"></section>
+
+    <h2>영상 <span class="status" id="count"></span></h2>
+    <section id="videos"></section>
+    <button class="add" id="addBtn">＋ 영상 추가</button>
+  </main>
+
+  <datalist id="cats"></datalist>
+  <input type="file" id="pickVideo" accept="video/mp4,video/webm,video/quicktime" hidden />
+  <input type="file" id="pickImage" accept="image/*" hidden />
+  <div class="toast" id="toast"></div>
+
+  <!-- 현재 데이터 불러오기 -->
+  <script src="videos.js"></script>
+  <script>
+  (() => {
+    const $ = (id) => document.getElementById(id);
+    const esc = (s = "") => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const clone = (o) => JSON.parse(JSON.stringify(o));
+    const MB = 1024 * 1024;
+
+    /* ---------- 상태 ---------- */
+    const data = clone(window.PORTFOLIO || {});
+    data.aspect ??= "9:16";
+    data.profile ??= {};
+    data.profile.links ??= [];
+    data.videos ??= [];
+
+    let dir = null;            // 포트폴리오 폴더 핸들
+    const pendingFiles = {};   // "media/x.mp4" → File (아직 폴더에 복사 전)
+    const blobUrls = {};       // 관리자 화면 미리보기용
+    let dirty = false;
+
+    const setDirty = (v = true) => {
+      dirty = v;
+      const s = $("status");
+      s.textContent = v ? "저장 안 된 변경사항 있음" : "저장됨";
+      s.className = "status " + (v ? "dirty" : "ok");
+    };
+    addEventListener("beforeunload", (e) => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+    let toastT;
+    const toast = (msg) => {
+      const t = $("toast"); t.textContent = msg; t.classList.add("show");
+      clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600);
+    };
+
+    /* ---------- 소스 도우미 ---------- */
+    const TYPES = { youtube: "YouTube", instagram: "Instagram 릴스", vimeo: "Vimeo", file: "mp4 파일" };
+    const typeOf = (v) => {
+      const s = v.source || {};
+      const raw = s.instagram || s.youtube || s.vimeo || s.url || "";
+      if (s.file) return "file";
+      if (s.instagram || /instagram\.com/.test(raw)) return "instagram";
+      if (s.vimeo || /vimeo\.com/.test(raw)) return "vimeo";
+      return "youtube";
+    };
+    const valueOf = (v) => { const s = v.source || {}; return s.file || s.instagram || s.youtube || s.vimeo || s.url || ""; };
+    const ytId = (s = "") => {
+      s = String(s).trim();
+      const m = s.match(/(?:youtu\.be\/|[?&]v=|\/(?:shorts|embed|live|v)\/)([\w-]{11})/);
+      return m ? m[1] : s;
+    };
+
+    async function fileUrl(path) {
+      if (!path || /^https?:/.test(path)) return path;
+      if (blobUrls[path]) return blobUrls[path];
+      if (pendingFiles[path]) return (blobUrls[path] = URL.createObjectURL(pendingFiles[path]));
+      return path; // admin.html 과 같은 폴더 기준 상대경로로 바로 열림
+    }
+
+    /* ---------- 기본 설정 ---------- */
+    function renderProfile() {
+      const p = data.profile;
+      $("profile").innerHTML = `
+        <div><label>이름<input data-p="name" value="${esc(p.name)}"></label></div>
+        <div><label>직함<input data-p="role" value="${esc(p.role)}"></label></div>
+        <div class="span2"><label>소개<textarea data-p="bio">${esc(p.bio)}</textarea></label></div>
+        <div><label>화면 비율
+          <select data-p="aspect">
+            <option value="9:16" ${data.aspect === "9:16" ? "selected" : ""}>9:16 세로 (쇼츠·릴스)</option>
+            <option value="16:9" ${data.aspect === "16:9" ? "selected" : ""}>16:9 가로</option>
+          </select></label></div>
+        <div class="span2">
+          <label>링크 (이메일은 mailto:주소 형태)</label>
+          ${p.links.map((l, i) => `
+            <div class="row">
+              <input data-link="${i}" data-k="label" value="${esc(l.label)}" placeholder="이름 (예: YouTube)" style="flex:0 0 140px">
+              <input data-link="${i}" data-k="url" value="${esc(l.url)}" placeholder="https://">
+              <button class="icon danger" data-act="delLink" data-i="${i}" title="링크 삭제">✕</button>
+            </div>`).join("")}
+          <div class="row"><button data-act="addLink">＋ 링크 추가</button></div>
+        </div>`;
+    }
+
+    $("profile").addEventListener("input", (e) => {
+      const t = e.target;
+      if (t.dataset.p === "aspect") data.aspect = t.value;
+      else if (t.dataset.p) data.profile[t.dataset.p] = t.value;
+      else if (t.dataset.link) data.profile.links[+t.dataset.link][t.dataset.k] = t.value;
+      else return;
+      setDirty();
+    });
+    $("profile").addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-act]");
+      if (!b) return;
+      if (b.dataset.act === "addLink") data.profile.links.push({ label: "", url: "" });
+      if (b.dataset.act === "delLink") data.profile.links.splice(+b.dataset.i, 1);
+      renderProfile(); setDirty();
+    });
+
+    /* ---------- 영상 목록 ---------- */
+    function thumbHTML(v, i) {
+      const t = typeOf(v), val = valueOf(v);
+      if (v.thumbnail) return `<img data-thumb="${i}" alt="">`;
+      if (t === "youtube" && val) return `<img src="https://i.ytimg.com/vi/${esc(ytId(val))}/hqdefault.jpg" alt="">`;
+      if (t === "file" && val) return `<video data-thumbvid="${i}" muted playsinline preload="metadata"></video>`;
+      return t === "instagram" ? "Reels" : "Video";
+    }
+
+    function renderVideos() {
+      const vs = data.videos;
+      $("count").textContent = `${vs.length}개`;
+      $("cats").innerHTML = [...new Set(vs.map((v) => v.category).filter(Boolean))].map((c) => `<option value="${esc(c)}">`).join("");
+      $("videos").innerHTML = vs.map((v, i) => {
+        const t = typeOf(v);
+        const pending = t === "file" && pendingFiles[valueOf(v)];
+        const big = pending && pending.size > 25 * MB;
+        return `
+        <article class="panel video" data-i="${i}">
+          <div class="thumb">${thumbHTML(v, i)}</div>
+          <div>
+            <div class="head">
+              <span class="num">#${i + 1}</span>
+              <label class="featured-tag"><input type="checkbox" data-act="featured" ${v.featured ? "checked" : ""}> 대표작</label>
+              <button class="icon" data-act="up" ${i === 0 ? "disabled" : ""} title="위로">↑</button>
+              <button class="icon" data-act="down" ${i === vs.length - 1 ? "disabled" : ""} title="아래로">↓</button>
+              <button class="icon danger" data-act="del" title="삭제">삭제</button>
+            </div>
+            <div class="grid2">
+              <div class="span2"><label>제목<input data-k="title" value="${esc(v.title)}"></label></div>
+              <div class="span2">
+                <label>영상</label>
+                <div class="src ${t === "file" ? "file" : ""}">
+                  <select data-act="type">${Object.entries(TYPES).map(([k, n]) => `<option value="${k}" ${k === t ? "selected" : ""}>${n}</option>`).join("")}</select>
+                  <input data-k="source" value="${esc(valueOf(v))}" placeholder="${t === "file" ? "media/파일이름.mp4" : "주소를 붙여 넣으세요"}">
+                  ${t === "file" ? `<button data-act="pickVideo">파일 선택</button>` : ""}
+                </div>
+                ${t === "instagram" ? `<p class="help">릴스는 썸네일이 자동으로 안 나와요. 아래에서 썸네일 이미지를 넣거나, mp4 파일로 올리는 걸 추천해요.</p>` : ""}
+                ${pending ? `<p class="help">저장하면 media 폴더에 복사돼요. (${(pending.size / MB).toFixed(1)}MB)</p>` : ""}
+                ${big ? `<p class="warn">25MB가 넘어서 GitHub 웹에서는 못 올려요. HandBrake로 용량을 줄여 주세요.</p>` : ""}
+              </div>
+              <div><label>카테고리<input data-k="category" value="${esc(v.category)}" list="cats" placeholder="예: 숏폼"></label></div>
+              <div><label>역할<input data-k="role" value="${esc(v.role)}" placeholder="예: 기획, 제작, 편집"></label></div>
+              <div><label>연도<input data-k="year" value="${esc(v.year)}" inputmode="numeric"></label></div>
+              <div><label>재생 시간<input data-k="duration" value="${esc(v.duration)}" placeholder="0:45"></label></div>
+              <div><label>조회수<input data-k="views" value="${esc(v.views ?? "")}" placeholder="예: 12000 또는 1.2만"></label></div>
+              <div>
+                <label>썸네일 (선택)</label>
+                <div class="row" style="margin-top:4px">
+                  <input data-k="thumbnail" value="${esc(v.thumbnail)}" placeholder="${t === "youtube" || t === "file" ? "비워두면 자동" : "media/이미지.jpg"}" style="margin-top:0">
+                  <button data-act="pickImage">이미지</button>
+                </div>
+              </div>
+              <div class="span2"><label>설명<textarea data-k="description">${esc(v.description)}</textarea></label></div>
+            </div>
+          </div>
+        </article>`;
+      }).join("");
+      hydrateThumbs();
+    }
+
+    async function hydrateThumbs() {
+      document.querySelectorAll("[data-thumb]").forEach(async (img) => {
+        img.src = await fileUrl(data.videos[+img.dataset.thumb].thumbnail);
+      });
+      document.querySelectorAll("[data-thumbvid]").forEach(async (vid) => {
+        vid.src = (await fileUrl(valueOf(data.videos[+vid.dataset.thumbvid]))) + "#t=0.1";
+      });
+    }
+
+    const clean = (v) => {
+      // 빈 값은 저장하지 않음, 숫자로 쓸 수 있는 건 숫자로
+      for (const k of Object.keys(v)) if (v[k] === "" || v[k] == null) delete v[k];
+      if (v.year && /^\d+$/.test(v.year)) v.year = +v.year;
+      if (v.views != null && /^\d+$/.test(String(v.views).replace(/,/g, ""))) v.views = +String(v.views).replace(/,/g, "");
+      if (!v.featured) delete v.featured;
+      return v;
+    };
+
+    $("videos").addEventListener("input", (e) => {
+      const t = e.target, card = t.closest(".video");
+      if (!card || !t.dataset.k) return;
+      const v = data.videos[+card.dataset.i];
+      if (t.dataset.k === "source") v.source = { [typeOf(v)]: t.value.trim() };
+      else v[t.dataset.k] = t.value;
+      setDirty();
+    });
+    $("videos").addEventListener("change", (e) => {
+      const t = e.target, card = t.closest(".video");
+      if (!card) return;
+      const i = +card.dataset.i, v = data.videos[i];
+      if (t.dataset.act === "type") { v.source = { [t.value]: "" }; renderVideos(); setDirty(); }
+      if (t.dataset.act === "featured") {
+        data.videos.forEach((x, j) => { x.featured = j === i ? t.checked : false; });
+        renderVideos(); setDirty();
+      }
+      if (t.dataset.k === "source" || t.dataset.k === "thumbnail") renderVideos();
+    });
+
+    let pickTarget = null;
+    $("videos").addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-act]");
+      if (!b) return;
+      const i = +b.closest(".video").dataset.i, vs = data.videos;
+      switch (b.dataset.act) {
+        case "up": [vs[i - 1], vs[i]] = [vs[i], vs[i - 1]]; break;
+        case "down": [vs[i + 1], vs[i]] = [vs[i], vs[i + 1]]; break;
+        case "del":
+          if (!confirm(`"${vs[i].title || "제목 없음"}" 영상을 목록에서 뺄까요?\n(media 폴더의 파일은 지워지지 않아요)`)) return;
+          vs.splice(i, 1); break;
+        case "pickVideo": pickTarget = i; $("pickVideo").value = ""; $("pickVideo").click(); return;
+        case "pickImage": pickTarget = i; $("pickImage").value = ""; $("pickImage").click(); return;
+      }
+      renderVideos(); setDirty();
+    });
+
+    $("addBtn").onclick = () => {
+      data.videos.unshift({ title: "", source: { youtube: "" }, category: "", year: new Date().getFullYear(), role: "" });
+      renderVideos(); setDirty();
+      scrollTo({ top: $("videos").offsetTop - 80, behavior: "smooth" });
+      document.querySelector('.video [data-k="title"]')?.focus();
+    };
+
+    /* ---------- 파일 추가 ---------- */
+    // 한글·띄어쓰기는 GitHub Pages 에서 문제가 될 수 있어 영어 이름으로 바꿔요
+    function safeName(name, fallback) {
+      const dot = name.lastIndexOf(".");
+      const ext = (dot > 0 ? name.slice(dot) : "").toLowerCase();
+      const base = (dot > 0 ? name.slice(0, dot) : name).toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "");
+      return (base.length >= 2 ? base : `${fallback}-${Date.now().toString(36)}`) + ext;
+    }
+    const usedNames = () => new Set([...data.videos.flatMap((v) => [valueOf(v), v.thumbnail]), ...Object.keys(pendingFiles)]);
+
+    function addPending(file, fallback) {
+      let suggested = safeName(file.name, fallback);
+      const name = prompt(`media 폴더에 저장할 파일 이름 (영어·숫자·하이픈만 권장)`, suggested);
+      if (!name) return null;
+      let path = "media/" + safeName(name, fallback);
+      if (usedNames().has(path) && !pendingFiles[path]) {
+        const dot = path.lastIndexOf(".");
+        path = `${path.slice(0, dot)}-2${path.slice(dot)}`;
+      }
+      pendingFiles[path] = file;
+      delete blobUrls[path];
+      return path;
+    }
+
+    const fmtDur = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, "0")}`;
+
+    $("pickVideo").onchange = () => {
+      const f = $("pickVideo").files[0], v = data.videos[pickTarget];
+      if (!f || !v) return;
+      const path = addPending(f, "video");
+      if (!path) return;
+      v.source = { file: path };
+      if (!v.title) v.title = f.name.replace(/\.[^.]+$/, "");
+      // 재생 시간 자동 입력
+      const probe = document.createElement("video");
+      probe.preload = "metadata";
+      probe.onloadedmetadata = () => {
+        if (isFinite(probe.duration)) { v.duration = fmtDur(probe.duration); renderVideos(); }
+      };
+      probe.src = URL.createObjectURL(f);
+      renderVideos(); setDirty();
+    };
+    $("pickImage").onchange = () => {
+      const f = $("pickImage").files[0], v = data.videos[pickTarget];
+      if (!f || !v) return;
+      const path = addPending(f, "thumb");
+      if (!path) return;
+      v.thumbnail = path;
+      renderVideos(); setDirty();
+    };
+
+    /* ---------- 저장 ---------- */
+    const HEADER = `/*
+ * ✏️ 포트폴리오 데이터 — admin.html(관리자 페이지)에서 편집하거나 직접 수정하세요.
+ *
+ * source 작성법 (하나만):
+ *   { youtube: "주소 또는 ID" }   { instagram: "릴스 주소" }
+ *   { vimeo: "주소 또는 ID" }     { file: "media/영상.mp4" }
+ * 선택 항목: thumbnail, views(조회수), featured(대표작), aspect("16:9" 등)
+ */
+`;
+    function serialize() {
+      const out = clone(data);
+      out.profile.links = out.profile.links.filter((l) => l.label || l.url);
+      out.videos = out.videos.map(clean);
+      return HEADER + "window.PORTFOLIO = " + JSON.stringify(out, null, 2) + ";\n";
+    }
+
+    async function getDir() {
+      if (dir) return dir;
+      const d = await showDirectoryPicker({ id: "portfolio", mode: "readwrite" });
+      try { await d.getFileHandle("index.html"); }
+      catch { throw new Error("이 폴더에 index.html이 없어요. 포트폴리오 폴더를 골라 주세요."); }
+      return (dir = d);
+    }
+
+    async function writeFile(root, path, blob) {
+      const parts = path.split("/");
+      let d = root;
+      for (const p of parts.slice(0, -1)) d = await d.getDirectoryHandle(p, { create: true });
+      const fh = await d.getFileHandle(parts.at(-1), { create: true });
+      const w = await fh.createWritable();
+      await w.write(blob);
+      await w.close();
+    }
+
+    function download(text) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([text], { type: "text/javascript" }));
+      a.download = "videos.js";
+      a.click();
+    }
+
+    async function save() {
+      const text = serialize();
+      if (!window.showDirectoryPicker) {
+        download(text);
+        toast("이 브라우저는 직접 저장이 안 돼서 videos.js를 다운로드했어요. 포트폴리오 폴더에 덮어써 주세요.");
+        if (Object.keys(pendingFiles).length) alert("추가한 영상·이미지 파일은 media 폴더에 직접 복사해 주세요.\n" + Object.keys(pendingFiles).join("\n"));
+        return;
+      }
+      try {
+        const root = await getDir();
+        for (const [path, file] of Object.entries(pendingFiles)) {
+          await writeFile(root, path, file);
+          delete pendingFiles[path];
+        }
+        await writeFile(root, "videos.js", new Blob([text], { type: "text/javascript" }));
+        setDirty(false);
+        renderVideos();
+        toast("저장했어요. 사이트를 새로고침하면 반영돼요.");
+      } catch (err) {
+        if (err.name === "AbortError") return;
+        alert("저장하지 못했어요.\n" + err.message);
+      }
+    }
+    $("saveBtn").onclick = save;
+    addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); }
+    });
+
+    /* ---------- 시작 ---------- */
+    if (!window.PORTFOLIO) {
+      $("notice").innerHTML = "<b>videos.js를 찾지 못했어요.</b> admin.html이 포트폴리오 폴더 안에 있는지 확인해 주세요.";
+    }
+    renderProfile();
+    renderVideos();
+    $("status").textContent = "";
+    window.__admin = { data, serialize }; // 디버그용
+  })();
+  </script>
+</body>
+</html>

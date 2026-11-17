@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Video Portfolio</title>
+  <meta name="description" content="영상 포트폴리오" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <button class="theme-toggle" id="themeToggle" aria-label="테마 전환">◐</button>
+      <p class="role" id="role"></p>
+      <h1 id="name"></h1>
+      <p class="bio" id="bio"></p>
+      <nav class="links" id="links"></nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="featured" id="featured" hidden></section>
+
+    <div class="toolbar">
+      <div class="filters" id="filters" role="tablist" aria-label="카테고리"></div>
+      <input class="search" id="search" type="search" placeholder="검색" aria-label="영상 검색" />
+    </div>
+
+    <p class="count" id="count"></p>
+    <section class="grid" id="grid"></section>
+    <p class="empty" id="empty" hidden>조건에 맞는 영상이 없어요.</p>
+  </main>
+
+  <footer class="wrap footer">
+    <span id="copyright"></span>
+    <a href="https://github.com/" id="sourceLink" target="_blank" rel="noopener">Open source · MIT</a>
+  </footer>
+
+  <dialog class="player" id="player" aria-label="영상 재생">
+    <div class="player-inner">
+      <button class="close" id="closePlayer" aria-label="닫기">✕</button>
+      <div class="frame" id="frame"></div>
+      <div class="player-meta">
+        <h2 id="pTitle"></h2>
+        <p class="meta" id="pMeta"></p>
+        <p id="pDesc"></p>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="videos.js"></script>  <script src="app.js"></script>
+</body>
+</html>
