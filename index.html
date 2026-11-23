@@ -14,7 +14,13 @@
   <header class="hero">
     <div class="wrap">
       <div class="topbar">
-        <a class="contact" id="contact" hidden>Contact</a>
+        <div class="contact-wrap" id="contactWrap" hidden>
+          <button class="contact" id="contact" aria-expanded="false" aria-controls="contactPop">Contact</button>
+          <div class="contact-pop" id="contactPop" hidden>
+            <span class="email" id="contactEmail"></span>
+            <button class="copy" id="contactCopy">복사</button>
+          </div>
+        </div>
         <button class="theme-toggle" id="themeToggle" aria-label="테마 전환">◐</button>
       </div>
       <p class="role" id="role"></p>

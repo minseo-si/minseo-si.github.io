@@ -44,11 +44,26 @@
     /^mailto:/i.test(url) ? "mail" : /youtu\.?be/i.test(url) ? "youtube" : /instagram\.com/i.test(url) ? "instagram" : "link";
   const allLinks = profile.links || [];
   const mail = allLinks.find((l) => kindOf(l.url) === "mail");
+  // Contact 버튼: 메일 앱을 열지 않고 이메일 주소를 보여 줘요
   if (mail) {
-    const c = $("contact");
-    c.href = mail.url;
-    c.title = mail.url.replace(/^mailto:/i, "");
-    c.hidden = false;
+    const addr = mail.url.replace(/^mailto:/i, "").split("?")[0];
+    const btn = $("contact"), pop = $("contactPop"), copy = $("contactCopy");
+    $("contactEmail").textContent = addr;
+    $("contactWrap").hidden = false;
+    const toggle = (show) => { pop.hidden = !show; btn.setAttribute("aria-expanded", show); };
+    btn.onclick = (e) => { e.stopPropagation(); toggle(pop.hidden); };
+    pop.onclick = (e) => e.stopPropagation();
+    document.addEventListener("click", () => toggle(false));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") toggle(false); });
+    copy.onclick = async () => {
+      try { await navigator.clipboard.writeText(addr); }
+      catch {
+        const r = document.createRange(); r.selectNodeContents($("contactEmail"));
+        getSelection().removeAllRanges(); getSelection().addRange(r); document.execCommand("copy");
+      }
+      copy.textContent = "복사됨 ✓";
+      setTimeout(() => (copy.textContent = "복사"), 1500);
+    };
   }
   $("links").innerHTML = allLinks
     .filter((l) => kindOf(l.url) !== "mail")
