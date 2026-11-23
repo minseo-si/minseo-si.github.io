@@ -38,7 +38,7 @@ window.PORTFOLIO = {
 
   videos: [
     {
-      title: "덕수궁 잡상의 서울 정찰",
+      title: "[서울시 공모전] 덕수궁 잡상의 서울 정찰",
       // 원래 유튜브 주소: https://youtube.com/shorts/9ZLoyLo3mNQ
       source: { file: "media/bamlog.mp4" },
       category: "롱폼",
@@ -49,7 +49,7 @@ window.PORTFOLIO = {
       featured: true,
     },
     {
-      title: "그니까 솔로 — 박강식 편",
+      title: "[AI 소개팅 예능] 그니까 솔로 – 박강식 편",
       source: { file: "media/blind-date.mp4" },
       category: "롱폼",
       year: 2026,
@@ -58,7 +58,7 @@ window.PORTFOLIO = {
       description: "코미디 소개팅 예능 팀 프로젝트 중 '박강식' 편. 소개팅 자리에서 케이크를 자로 재고, 라떼 한 모금까지 그램으로 달아 정산하는 짠돌이 캐릭터를 그렸습니다. AI로 생성한 장면은 Camera Raw로 화질을 보정했습니다.",
     },
     {
-      title: "엄마와 12,000원 데이트",
+      title: "[기관 홍보] 한방진흥센터 – 엄마와 12,000원 데이트",
       source: { file: "media/mom-date.mp4" },
       category: "숏폼",
       year: 2026,
@@ -67,7 +67,7 @@ window.PORTFOLIO = {
       description: "장꾸리가 엄마와 함께 한방진흥센터를 찾아 한복 입기, 보자기 한방 체험, 약초 족욕까지 12,000원으로 즐기는 하루. 기관 홍보를 모녀의 따뜻한 데이트 이야기로 풀었습니다.",
     },
     {
-      title: "배달음식",
+      title: "[공감 숏폼] 배달비 0원의 함정",
       source: { file: "media/delivery.mp4" },
       category: "숏폼",
       year: 2026,
@@ -76,7 +76,7 @@ window.PORTFOLIO = {
       description: "'배달비 0원, 총액은 묻지 마세요.' 무료배송 금액을 채우려다 혼자 먹기엔 너무 많은 떡볶이 한 상을 시켜 버린 장꾸리. 누구나 한 번쯤 해 본 배달 앱 속 합리화를 그린 공감 애니메이션.",
     },
     {
-      title: "자야하는데",
+      title: "[공감 숏폼] 자야 하는데 못 자는 밤",
       source: { file: "media/sleep.mp4" },
       category: "숏폼",
       year: 2026,
@@ -85,7 +85,7 @@ window.PORTFOLIO = {
       description: "'저녁은 아깝고 아침은 두려워.' 불 끄고 누워서도 끝없는 쇼츠를 넘기다 결국 아침을 맞는 장꾸리. 잠들기 아쉬운 밤의 마음을 15초에 담았습니다.",
     },
     {
-      title: "상어가 집앞에 나타났을 때",
+      title: "[캐릭터 브이로그] 집 앞 바다에 상어가 나타났을 때",
       // 인스타 릴스 주소 대신 mp4 파일로 바꿨어요 (화면이 더 깔끔해요)
       // 원래 주소: https://www.instagram.com/reel/DeMY5WPue5p/
       source: { file: "media/shark.mp4" },
@@ -96,7 +96,7 @@ window.PORTFOLIO = {
       description: "부산 고향 바다에 나타난 상어 '부캉이'를 보러 장꾸리가 엄마와 함께 나선 하루. 상어를 찾아 두리번거리는 설렘을 캐릭터 브이로그로 담았습니다.",
     },
     {
-      title: "추석",
+      title: "[캐릭터 브이로그] 추석, 본가에서 못 떠나는 이유",
       source: { file: "media/chuseok.mp4" },
       category: "숏폼",
       year: 2026,
@@ -105,7 +105,7 @@ window.PORTFOLIO = {
       description: "'상어 보러 본가에 내려가면 안 되는 이유.' 고향 집이 너무 편해서 서울로 돌아가는 기차표를 자꾸 미루게 되는 장꾸리의 추석. 돌아가는 길에 다시 엄마가 보고 싶어지는 마음까지 담았습니다.",
     },
     {
-      title: "청소",
+      title: "[공감 숏폼] 청소하려다 추억 정리",
       source: { file: "media/cleaning.mp4" },
       category: "숏폼",
       year: 2026,
@@ -114,7 +114,7 @@ window.PORTFOLIO = {
       description: "'난 분명 청소하려 했어.' 서랍 정리를 시작했다가 옛날 앨범과 물건에 빠져, 결국 방이 처음보다 더 어질러지는 장꾸리의 이야기.",
     },
     {
-      title: "하루가 짧은 이유",
+      title: "[공감 숏폼] 하루가 짧은 이유",
       source: { file: "media/short-day.mp4" },
       category: "숏폼",
       year: 2026,
@@ -123,7 +123,7 @@ window.PORTFOLIO = {
       description: "아침에 잠깐 집어 든 스마트폰. 창밖이 노을에서 밤으로 바뀌는 동안 그대로인 장꾸리를 통해 '하루가 짧은 이유'를 6초 만에 보여 줍니다.",
     },
     {
-      title: "금요일 좋아",
+      title: "[캐릭터 숏폼] 금요일 좋아",
       source: { file: "media/friday.mp4" },
       category: "숏폼",
       year: 2026,
@@ -132,7 +132,7 @@ window.PORTFOLIO = {
       description: "금요일이 반가워 온몸으로 춤추는 장꾸리. 짧고 경쾌한 6초 루프 영상.",
     },
     {
-      title: "나의 서울",
+      title: "[서울 홍보] 나의 서울",
       source: { file: "media/my-seoul.mp4" },
       aspect: "16:9", // 가로 영상이라 재생할 때 가로로 나와요
       category: "숏폼",
