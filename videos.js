@@ -49,6 +49,15 @@ window.PORTFOLIO = {
       featured: true,
     },
     {
+      title: "그니까 솔로 — 박강식 편",
+      source: { file: "media/blind-date.mp4" },
+      category: "AI 예능",
+      year: 2026,
+      duration: "1:12",
+      role: "기획, 제작, 편집",
+      description: "코미디 소개팅 예능 팀 프로젝트에서 맡은 '박강식' 편. AI로 생성한 장면은 Camera Raw로 화질 보정.",
+    },
+    {
       title: "엄마와 12,000원 데이트",
       source: { file: "media/mom-date.mp4" },
       category: "공모전·홍보",
