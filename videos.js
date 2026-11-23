@@ -41,7 +41,7 @@ window.PORTFOLIO = {
       title: "덕수궁 잡상의 서울 정찰",
       // 원래 유튜브 주소: https://youtube.com/shorts/9ZLoyLo3mNQ
       source: { file: "media/bamlog.mp4" },
-      category: "공모전·홍보",
+      category: "롱폼",
       year: 2026,
       duration: "1:07",
       role: "기획, 제작, 편집 ",
@@ -51,7 +51,7 @@ window.PORTFOLIO = {
     {
       title: "그니까 솔로 — 박강식 편",
       source: { file: "media/blind-date.mp4" },
-      category: "AI 예능",
+      category: "롱폼",
       year: 2026,
       duration: "1:12",
       role: "기획, 제작, 편집",
@@ -60,7 +60,7 @@ window.PORTFOLIO = {
     {
       title: "엄마와 12,000원 데이트",
       source: { file: "media/mom-date.mp4" },
-      category: "공모전·홍보",
+      category: "숏폼",
       year: 2026,
       duration: "1:00",
       role: "기획, 제작, 편집",
@@ -69,7 +69,7 @@ window.PORTFOLIO = {
     {
       title: "배달음식",
       source: { file: "media/delivery.mp4" },
-      category: "공감 애니메이션",
+      category: "숏폼",
       year: 2026,
       duration: "0:38",
       role: "기획, 제작, 편집",
@@ -78,7 +78,7 @@ window.PORTFOLIO = {
     {
       title: "자야하는데",
       source: { file: "media/sleep.mp4" },
-      category: "공감 애니메이션",
+      category: "숏폼",
       year: 2026,
       duration: "0:15",
       role: "기획, 제작, 편집",
@@ -89,7 +89,7 @@ window.PORTFOLIO = {
       // 인스타 릴스 주소 대신 mp4 파일로 바꿨어요 (화면이 더 깔끔해요)
       // 원래 주소: https://www.instagram.com/reel/DeMY5WPue5p/
       source: { file: "media/shark.mp4" },
-      category: "일상 브이로그",
+      category: "숏폼",
       year: 2026,
       duration: "0:48",
       role: "기획, 제작, 편집",
@@ -98,7 +98,7 @@ window.PORTFOLIO = {
     {
       title: "추석",
       source: { file: "media/chuseok.mp4" },
-      category: "일상 브이로그",
+      category: "숏폼",
       year: 2026,
       duration: "0:44",
       role: "기획, 제작, 편집",
@@ -107,7 +107,7 @@ window.PORTFOLIO = {
     {
       title: "청소",
       source: { file: "media/cleaning.mp4" },
-      category: "공감 애니메이션",
+      category: "숏폼",
       year: 2026,
       duration: "0:29",
       role: "기획, 제작, 편집",
@@ -116,7 +116,7 @@ window.PORTFOLIO = {
     {
       title: "하루가 짧은 이유",
       source: { file: "media/short-day.mp4" },
-      category: "공감 애니메이션",
+      category: "숏폼",
       year: 2026,
       duration: "0:06",
       role: "기획, 제작, 편집",
@@ -125,7 +125,7 @@ window.PORTFOLIO = {
     {
       title: "금요일 좋아",
       source: { file: "media/friday.mp4" },
-      category: "공감 애니메이션",
+      category: "숏폼",
       year: 2026,
       duration: "0:06",
       role: "기획, 제작, 편집",
@@ -135,7 +135,7 @@ window.PORTFOLIO = {
       title: "나의 서울",
       source: { file: "media/my-seoul.mp4" },
       aspect: "16:9", // 가로 영상이라 재생할 때 가로로 나와요
-      category: "공모전·홍보",
+      category: "숏폼",
       year: 2026,
       duration: "0:30",
       role: "기획, 제작, 편집",
