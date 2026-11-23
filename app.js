@@ -45,7 +45,12 @@
   const allLinks = profile.links || [];
   const mail = allLinks.find((l) => kindOf(l.url) === "mail");
   // Contact 버튼: 메일 앱을 열지 않고 이메일 주소를 보여 줘요
-  if (mail) {
+  if (mail && !$("contactWrap") && $("contact")) {
+    // 브라우저에 예전 index.html이 남아 있을 때도 Contact가 사라지지 않게
+    const c = $("contact");
+    c.href = mail.url;
+    c.hidden = false;
+  } else if (mail) {
     const addr = mail.url.replace(/^mailto:/i, "").split("?")[0];
     const btn = $("contact"), pop = $("contactPop"), copy = $("contactCopy");
     $("contactEmail").textContent = addr;
